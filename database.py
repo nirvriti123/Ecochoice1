@@ -13,17 +13,16 @@ def create_table(table_name):
            name VARCHAR(100) ,
            manufacturer VARCHAR(100) ,
            price DECIMAL(10, 2) , 
-           quantity Varchar(20) DEFAULT 0,
+           quantity Varchar(100) DEFAULT '0',
            description VARCHAR(250),
            certifications VARCHAR(250),
-           image1 VARCHAR(250),
-           image2 VARCHAR(250),
+           image VARCHAR(500),
            rating decimal(10,2) default null
            );
            """
     cursor.execute(query)
     values = ''
-    insert_query = f"insert into {table_name} (id,name,manufacturer, price, quantity, description, certifications, image1) values {values};"
+    insert_query = f"insert into {table_name} (id,name,manufacturer, price, quantity, description, certifications, image) values {values};"
 
     csv_file = table_name+'.csv'
     file_path='./data_files/'+csv_file
@@ -32,15 +31,19 @@ def create_table(table_name):
             reader = csv.reader(file)
             headers = next(reader)
             for row in reader:
-                print(row)
+                #print(row)
                 values = tuple(row)
-                insert_query = f"insert into {table_name} (id,name,manufacturer, price, quantity, description, certifications, image1) values {values};"
+                insert_query = f"insert into {table_name} (id,name,manufacturer, price, quantity, description, certifications, image) values {values};"
 
                 cursor.execute(insert_query)
         conn.commit()
 
     except FileNotFoundError:
         print('File not found')
+
+category_dict={1:'laundry',2:'cleaning', 3:'misc_household', 4:'stationery', 5:'self_care', 6:'health'}
+for table_name in category_dict.values():
+    create_table(table_name)
 
 
 
